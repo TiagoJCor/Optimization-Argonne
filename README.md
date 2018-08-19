@@ -4,9 +4,9 @@ Implementation of parallel variable transformation and coordinate descent optimi
 
 ---
 
-### Dependencies:
+### Python packages used:
 
--- numpy (1.10.0 or newer)
--- scipy
--- matplotlib
--- nlopt
+* numpy (1.10.0 or newer)
+* scipy
+* matplotlib
+* nlopt
