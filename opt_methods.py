@@ -96,18 +96,19 @@ def block_cd(block_choose, f, g, b, x0, alpha=1e-4, max_step=1e4, tol=1e-6,
     # Number of variables per block (if n mod b != 0, round down to 
     # nearest integer). 
     n_var_b = int(n/b)
-    k = 0
+    outer_iter = 0
     I = np.eye(n)
     
     for s in range(int(max_step)):
         rand_index = np.random.permutation(n)
+        
         for i in range(b):
-            
             if (block_choose == 'cyc_bcd'):
                 if (i == (b - 1)):
                     ind = np.arange((b - 1) * n_var_b, n)
                 else:
                     ind = np.arange(i * n_var_b, (i + 1) * n_var_b)
+                    
             elif (block_choose == 'cards_deal'):
                 ind = np.arange(n)[i::b]
                 
@@ -128,14 +129,16 @@ def block_cd(block_choose, f, g, b, x0, alpha=1e-4, max_step=1e4, tol=1e-6,
             grad_i = g(x_min)[ind]
             desc_vec = np.matmul(I[:, ind], grad_i.reshape(-1, 1)).flatten()
             x_min = x_min - alpha * desc_vec
-        k += 1
-#        x_list.append(x_min.copy())
+        
+        outer_iter += 1
+        
         if(np.linalg.norm(g(x_min)) < tol):
             print("Gradient is below threshold, routine stopped.")
             break
+        
     if (verbose == True):    
-        print("After %d steps we have \nx = %s \nf(x) = %s\n||g(x)|| = %s" % (k, 
-          x_min, f(x_min), np.linalg.norm(g(x_min)))) 
+        print("After %d steps we have \nx = %s \nf(x) = %s\n||g(x)|| = %s" % 
+              (outer_iter, x_min, f(x_min), np.linalg.norm(g(x_min)))) 
         
     return f(x_min), np.linalg.norm(g(x_min))
 
